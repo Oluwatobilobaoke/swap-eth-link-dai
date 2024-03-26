@@ -10,4 +10,4 @@ fork-sepolia:
 
 deploy-sepolia:
 	@echo "Deploying to sepolia..."
-	@forge script ./script/MultiSwap.s.sol --rpc-url ${SEPOLIA_RPC_URL}  --broadcast --etherscan-api-key ${ETHERSCAN_KEY} --verifier-url ${SEPOLIA_RPC_URL} --verify -vvvvv
+	@forge script ./script/DeployMultiSwap.s.sol --rpc-url ${SEPOLIA_RPC_URL}  --broadcast --private-key ${PRIVATE_KEY} --etherscan-api-key ${ETHERSCAN_KEY} --verifier-url ${SEPOLIA_RPC_URL} --verify -vvvvv

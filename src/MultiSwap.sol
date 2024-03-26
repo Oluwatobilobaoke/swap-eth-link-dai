@@ -156,10 +156,7 @@ contract MultiSwap {
         require(_fromToken != _toToken, "Cannot swap to the same token");
 
         if (_fromToken == address(0)) {
-            require(
-                msg.value == _amount,
-                "Sent ETH amount must match specified amount"
-            );
+            revert();
         } else {
             IERC20 fromToken = IERC20(_fromToken);
             uint256 allowance = fromToken.allowance(msg.sender, address(this));
@@ -173,6 +170,23 @@ contract MultiSwap {
         uint256 receivedAmount = _swap(_fromToken, _toToken, _amount);
 
         emit Swap(_fromToken, _toToken, msg.sender, _amount, receivedAmount);
+    }
+
+    function swapEThForTokens(
+        address _fromToken,
+        address _toToken
+    ) external payable {
+        require(_fromToken != _toToken, "Cannot swap to the same token");
+
+        if (_fromToken != address(0)) {
+            revert();
+        }
+
+        require(msg.value > 0, "Sent ETH amount must match specified amount");
+
+        uint256 receivedAmount = _swap(_fromToken, _toToken, msg.value);
+
+        emit Swap(_fromToken, _toToken, msg.sender, msg.value, receivedAmount);
     }
 
     function _swap(

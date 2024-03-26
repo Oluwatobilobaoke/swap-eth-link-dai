@@ -20,6 +20,7 @@ contract MultiSwapTest is Test {
 
     function setUp() public {
         multiSwap = new MultiSwap();
+        fundContract();
     }
 
     // function testGetDATAPRICE() public view {
@@ -42,26 +43,45 @@ contract MultiSwapTest is Test {
     //     console2.log("rate==>", rate);
     // }
 
-    // function testSwapEthForDAI() public {
-    //     vm.startPrank(0xd0aD7222c212c1869334a680e928d9baE85Dd1d0);
-    //     IERC20(DAIContract).transfer(address(multiSwap), 30000e18);
+    function testSwapEthForDAI() public {
+        vm.startPrank(LINKWHALE);
+        fundUserEth(LINKWHALE);
 
-    //     uint256 _amount = 1e18;
+        (uint ethBalBefore, uint tokenBalBefore) = getBeforeBalance(
+            LINKWHALE,
+            DAIContract,
+            "DAI"
+        );
 
-    //     uint256 resultBeforeSwap = IERC20(DAIContract).balanceOf(
-    //         0x77158c23cC2D9dd3067a82E2067182C85fA3b1F6
-    //     );
+        multiSwap.swapEThForTokens{value: 0.05 ether}(address(0), DAIContract);
+        (uint ethBalAfter, uint tokenBalAfter) = getAfterBalance(
+            LINKWHALE,
+            DAIContract,
+            "DAI"
+        );
 
-    //     multiSwap.swapTokens(address(0), DAIContract, _amount);
-    //     uint256 result = IERC20(DAIContract).balanceOf(
-    //         0x77158c23cC2D9dd3067a82E2067182C85fA3b1F6
-    //     );
+        assertLt(ethBalAfter, ethBalBefore);
+    }
 
-    //     console2.log("result resultBeforeSwap swap", resultBeforeSwap);
-    //     console2.log("result after swap", result);
+    function testSwapEthForLINK() public {
+        vm.startPrank(DAIWHALE);
+        fundUserEth(DAIWHALE);
 
-    //     assertLt(result, _amount);
-    // }
+        (uint ethBalBefore, uint tokenBalBefore) = getBeforeBalance(
+            DAIWHALE,
+            LINKContract,
+            "LINK"
+        );
+
+        multiSwap.swapEThForTokens{value: 0.05 ether}(address(0), DAIContract);
+        (uint ethBalAfter, uint tokenBalAfter) = getAfterBalance(
+            DAIWHALE,
+            LINKContract,
+            "LINK"
+        );
+
+        assertLt(ethBalAfter, ethBalBefore);
+    }
 
     function testSwapDAIforETH() public {
         fundContract();
@@ -106,7 +126,15 @@ contract MultiSwapTest is Test {
         vm.deal(address(multiSwap), 100 ether);
         deal(address(DAIContract), address(multiSwap), 100000 ether);
         deal(address(LINKContract), address(multiSwap), 100000 ether);
+        // transfer link to contract
+        // vm.startPrank(LINKWHALE);
+        // IERC20(LINKContract).transfer(address(multiSwap), 100 ether);
+        // vm.stopPrank();
 
+        // // transfer dai to contract
+        // vm.startPrank(DAIWHALE);
+        // IERC20(DAIContract).transfer(address(multiSwap), 100 ether);
+        // vm.stopPrank();
         console.log("ETHERS in Contract:  ", address(multiSwap).balance);
         console.log(
             "DAI in Contract:  ",
@@ -122,26 +150,26 @@ contract MultiSwapTest is Test {
         address userAddress,
         address _tokenContract,
         string memory tokenNAME
-    ) public view {
-        console.log("ETH BALANCE BEFORE ===>", address(userAddress).balance);
-        console.log(
-            "TOKEN BALANCE BEFORE ===>",
-            IERC20(_tokenContract).balanceOf(DAIWHALE),
-            tokenNAME
-        );
+    ) public view returns (uint, uint) {
+        uint256 ethBalBefore = address(userAddress).balance;
+        uint256 tokenBalBefore = IERC20(_tokenContract).balanceOf(DAIWHALE);
+        console.log("ETH BALANCE BEFORE ===>", ethBalBefore);
+        console.log("TOKEN BALANCE BEFORE ===>", tokenBalBefore, tokenNAME);
+
+        return (ethBalBefore, tokenBalBefore);
     }
 
     function getAfterBalance(
         address userAddress,
         address _tokenContract,
         string memory tokenNAME
-    ) public view {
-        console.log("ETH BALANCE BEFORE ===>", address(userAddress).balance);
-        console.log(
-            "TOKEN BALANCE BEFORE ===>",
-            IERC20(_tokenContract).balanceOf(DAIWHALE),
-            tokenNAME
-        );
+    ) public view returns (uint, uint) {
+        uint256 ethBalAfter = address(userAddress).balance;
+        uint256 tokenBalAfter = IERC20(_tokenContract).balanceOf(DAIWHALE);
+        console.log("ETH BALANCE AFTER ===>", ethBalAfter);
+        console.log("TOKEN BALANCE AFTER ===>", tokenBalAfter, tokenNAME);
+
+        return (ethBalAfter, tokenBalAfter);
     }
 
     function fundUserEth(address userAdress) public {

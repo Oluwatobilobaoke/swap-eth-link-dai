@@ -23,19 +23,19 @@ contract MultiSwapTest is Test {
         fundContract();
     }
 
-    // function testGetDATAPRICE() public view {
-    //     int ethUSDPrice = multiSwap.LatestETHprice();
-    //     int DAIUSDPrice = multiSwap.LatestDAIprice();
-    //     int LINKUSDPrice = multiSwap.LatestLinkprice();
+    function testGetDATAPRICE() public view {
+        int ethUSDPrice = multiSwap.LatestETHprice();
+        int DAIUSDPrice = multiSwap.LatestDAIprice();
+        int LINKUSDPrice = multiSwap.LatestLinkprice();
 
-    //     // console.log("ETH price: ", price);
-    //     console2.log("ethUSD price: ", ethUSDPrice );
-    //     console2.log("DAIUSD price: ", DAIUSDPrice);
-    //     console2.log("LINKUSD price: ", LINKUSDPrice );
-    //     assertTrue(ethUSDPrice > 0);
-    //     assertTrue(DAIUSDPrice > 0);
-    //     assertTrue(LINKUSDPrice > 0);
-    // }
+        // console.log("ETH price: ", price);
+        console2.log("ethUSD price: ", ethUSDPrice );
+        console2.log("DAIUSD price: ", DAIUSDPrice);
+        console2.log("LINKUSD price: ", LINKUSDPrice );
+        assertTrue(ethUSDPrice > 0);
+        assertTrue(DAIUSDPrice > 0);
+        assertTrue(LINKUSDPrice > 0);
+    }
 
     // function testGetDerivedPrice() public view {
     //     int rate = multiSwap.getDerivedPrice(ethUsd, diaUsd, 8);
@@ -119,16 +119,26 @@ contract MultiSwapTest is Test {
     //     fundUserEth(LINKWHALE);
     //     fundUserToken(LINKWHALE, LINKContract);
 
-    //     uint256 _amount = 10;
-
-    //     getBeforeBalance(LINKWHALE, LINKContract, "LINK");
+    //     (uint ethBalBefore, uint tokenBalBefore) = getBeforeBalance(
+    //         LINKWHALE,
+    //         LINKContract,
+    //         "LINK"
+    //     );
 
     //     // approve multiswap to remove money
-    //     IERC20(LINKContract).approve(address(multiSwap), _amount);
+    //     IERC20(LINKContract).approve(address(multiSwap), 20 ether);
 
-    //     multiSwap.swapTokens(LINKContract, address(0), _amount);
+    //     multiSwap.swapTokens(LINKContract, address(0), 20 ether);
 
-    //     getAfterBalance(LINKWHALE, LINKContract, "DAI");
+    //     (uint ethBalAfter, uint tokenBalAfter) = getAfterBalance(
+    //         LINKWHALE,
+    //         LINKContract,
+    //         "LINK"
+    //     );
+    //     vm.stopPrank();
+
+    //     assertLt(tokenBalAfter, tokenBalBefore);
+    //     assertGt(ethBalAfter, ethBalBefore);
     // }
 
     function fundContract() public {

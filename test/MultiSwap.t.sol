@@ -90,17 +90,26 @@ contract MultiSwapTest is Test {
         fundUserEth(DAIWHALE);
         fundUserToken(DAIWHALE, DAIContract);
 
-        uint256 _amount = 10;
-
-        getBeforeBalance(DAIWHALE, DAIContract, "DAI");
+        (uint ethBalBefore, uint tokenBalBefore) = getBeforeBalance(
+            DAIWHALE,
+            DAIContract,
+            "DAI"
+        );
 
         // approve multiswap to remove money
-        IERC20(DAIContract).approve(address(multiSwap), _amount);
+        IERC20(DAIContract).approve(address(multiSwap), 20 ether);
 
-        multiSwap.swapTokens(DAIContract, address(0), _amount);
+        multiSwap.swapTokens(DAIContract, address(0), 20 ether);
 
-        getAfterBalance(DAIWHALE, DAIContract, "DAI");
+        (uint ethBalAfter, uint tokenBalAfter) = getAfterBalance(
+            DAIWHALE,
+            DAIContract,
+            "DAI"
+        );
         vm.stopPrank();
+
+        assertLt(tokenBalAfter, tokenBalBefore);
+        assertGt(ethBalAfter, ethBalBefore);
     }
 
     // function testSwapLINKforETH() public {
